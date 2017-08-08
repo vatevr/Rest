@@ -5,7 +5,7 @@ var express = require('express'),
 var db = process.env.ENV === 'test' ?
     mongoose.connect('mongodb://localhost/bookAPI_test') : mongoose.connect('mongodb://localhost/bookAPI');
 
-var Book = require('./models/bookModel');
+var Book = require('./app/models/bookModel');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -13,7 +13,7 @@ var port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-bookRouter = require('./routes/bookRoutes')(Book);
+bookRouter = require('./app/routes/bookRoutes')(Book);
 
 app.use('/api/books', bookRouter);
 // app.use('/api/authors', authorRouter);
