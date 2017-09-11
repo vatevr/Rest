@@ -1,6 +1,6 @@
 'use strict';
 
-var passport = required('passport');
+var passport = require('passport');
 
 module.exports.isAuthenticatedOrApiKey = function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {

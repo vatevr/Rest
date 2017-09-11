@@ -2,6 +2,32 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     crypto = require('crypto');
 
+
+var validateLocalStrategyProperty = function(property) {
+    var propHasLength;
+    if (property) {
+        propHasLength = !!property.length;
+    } else {
+        propHasLength = false;
+    }
+
+    return ((this.provider !== 'local' && !this.updated) || propHasLength);
+};
+
+/**
+ * A Validation function for local strategy password
+ */
+var validateLocalStrategyPassword = function(password) {
+    return (this.provider !== 'local' || (password && password.length > 6));
+};
+
+/**
+ * A Validation function for username
+ */
+var validateUsername = function(username) {
+    return (username.match(/^[a-zA-Z0-9]+$/) !== null);
+};
+
 var UserSchema = new Schema({
     firstName: {
         type: String,
@@ -30,7 +56,7 @@ var UserSchema = new Schema({
         required: true,
         lowercase: true,
         validate: {
-            validator: validateUserName,
+            validator: validateUsername,
             message: 'Please use a valid username'
         }
     },
@@ -114,4 +140,9 @@ UserSchema.methods.isAdmin = function() {
     return this.roles.indexOf('admin') >= 0;
 };
 
-module.exports = mongoose.model('User', UserSchema);
+var User = mongoose.model('User', UserSchema);
+
+module.exports = {
+    model: mongoose.model('User', UserSchema),
+    schema: UserSchema
+};
